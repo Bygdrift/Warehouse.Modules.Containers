@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ModuleName": {
+            "value": "OS2IOT"
+        },
+        "MonthsToKeepDataInDataLake": {
+            "value": 6
+        },
+        "OS2IOTApiBaseUrl": {
+            "value": "https://backend.os2iot.gate21.dk"
+        },
+        "OS2IOTApiScheduleExpression": {
+            "value": "0 0 1 * * *"
+        },
+        "OS2IOTApiUserName": {
+            "value": "Username to OS2IOT"
+        },
+        "OS2IOTApiPassword": {
+            "value": "Password to OS2IOT"
+        },
+        "OS2IOTPostPayloadsAuthorizationKey": {
+            "value": "The authorizationKey inserted in OS2IOT"
+        },
+        "IngestQueuedPayloadsScheduleExpression": {
+            "value": "0 */1 * * * *"
+        },
+      "TimeZoneId": {
+        "value": "Romance Standard Time"
+      },
+      "CultureName": {
+        "value": "da-DK"
+      }
+    }
+}
