@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Warehouse", "..\..\Warehous
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleTests", "ModuleTests\ModuleTests.csproj", "{9C19DDDB-5BA4-4CFB-BED5-05330E3D6E5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTrigger", "TestTrigger\TestTrigger.csproj", "{C79BECBA-E272-43ED-BDA1-F38C33545E8F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{9C19DDDB-5BA4-4CFB-BED5-05330E3D6E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C19DDDB-5BA4-4CFB-BED5-05330E3D6E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C19DDDB-5BA4-4CFB-BED5-05330E3D6E5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C79BECBA-E272-43ED-BDA1-F38C33545E8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C79BECBA-E272-43ED-BDA1-F38C33545E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C79BECBA-E272-43ED-BDA1-F38C33545E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C79BECBA-E272-43ED-BDA1-F38C33545E8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

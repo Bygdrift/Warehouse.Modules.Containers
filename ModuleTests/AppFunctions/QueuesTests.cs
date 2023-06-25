@@ -1,4 +1,5 @@
 ﻿using Bygdrift.Warehouse;
+using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using Module.AppFunctions;
 using Module.AppFunctions.Models;
 using Moq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,20 +21,20 @@ namespace ModuleTests.AppFunctions
     [TestClass]
     public class QueuesTests
     {
-        private readonly Mock<ILogger<TimeTrigger>> loggerMock = new();
-        private readonly TimeTrigger function;
+        private readonly Mock<ILogger<TimerTrigger>> loggerMock = new();
+        private readonly TimerTrigger function;
         private readonly AppBase<Settings> app;
 
         public QueuesTests()
         {
-            function = new TimeTrigger(loggerMock.Object);
+            function = new TimerTrigger(loggerMock.Object);
             app = new AppBase<Settings>();
         }
 
         [TestMethod]
         public async Task AddData()
         {
-           await function.Run(null);
+            await function.Run(null);
         }
 
         //[TestMethod]

@@ -1,6 +1,9 @@
 Clear-Host
 Write-Host '====================================================' -ForegroundColor Yellow
 
+ az bicep decompile --file slet.json
+# az bicep build --file Warehouse.Modules.OS2IOTBMS_ARM.bicep
+
 # az login
 
 # https://learn.microsoft.com/en-us/azure/container-instances/container-instances-managed-identity?ref=zimmergren.net&WT.mc_id=tozimmergren&utm_campaign=zimmergren&utm_medium=blog&utm_source=zimmergren
@@ -15,6 +18,6 @@ Write-Host '====================================================' -ForegroundCol
 # Create container group with system-managed identity
 # az container create -g $group -n mycontainer --image mcr.microsoft.com/azure-cli --assign-identity --scope $RG_ID  --command-line "tail -f /dev/null"
 
-$SP_ID=$(az container show --resource-group example --name mycontainer --query identity.principalId --out tsv)
+# $SP_ID=$(az container show --resource-group example --name mycontainer --query identity.principalId --out tsv)
 
 # az bicep decompile --file main.json

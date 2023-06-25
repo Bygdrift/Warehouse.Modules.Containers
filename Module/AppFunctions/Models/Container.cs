@@ -1,33 +1,48 @@
 ﻿using Azure.ResourceManager.ContainerInstance.Models;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Bygdrift.Warehouse;
 
 namespace Module.AppFunctions.Models
 {
     public class Container
     {
-        public Container(string containerName, string image, Uri? vaultUri, double memoryInGB, double cpu, (string Name, string Variable)[] variables)
+        public Container(AppBase<Settings> app, string containerName, string image, double memoryInGB, double cpu, string variablesJson)
         {
+            App = app;
             ContainerName = containerName;
             Image = image;
-            VaultUri = vaultUri;
-
             MemoryInGB = memoryInGB;
             Cpu = cpu;
-
-            if (variables != null)
-                foreach (var item in variables)
-                    Variables.Add(new ContainerEnvironmentVariable(item.Name) { Value = item.Variable });
-
-            Variables.Add(new ContainerEnvironmentVariable("VaultUri") { Value = vaultUri?.ToString() });
-
+            Variables = GetVaribles(variablesJson);
         }
 
-        public Uri? VaultUri { get; }
+        public AppBase<Settings> App { get; }
         public string ContainerName { get; }
         public string Image { get; }
         public double MemoryInGB { get; }
         public double Cpu { get; }
-        public List<ContainerEnvironmentVariable> Variables { get; set; } = new();
+        public Dictionary<string, string> Variables { get; }
+
+        //public List<ContainerEnvironmentVariable> Variables { get; set; } = new();
+
+        private Dictionary<string, string> GetVaribles(string json)
+        {
+            if (string.IsNullOrEmpty(json)) return null;
+
+            try
+            {
+                var jArray = JsonConvert.DeserializeObject<JArray>(json);
+                return jArray.ToDictionary(k => ((JObject)k).Properties().First().Name, v => v.Values().First().Value<string>());
+            }
+            catch (Exception e)
+            {
+                App.Log.LogWarning($"Could not convert Variable correct. Error: {e.Message}");
+                return null;
+            }
+        }
     }
 }
