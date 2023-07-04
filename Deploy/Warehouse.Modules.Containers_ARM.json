@@ -4,43 +4,98 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "7204349141577575013"
+      "version": "0.18.4.5664",
+      "templateHash": "2938309899113055301"
     }
   },
   "parameters": {
     "ModuleName": {
       "type": "string",
-      "defaultValue": "OS2IOTBMS",
+      "defaultValue": "Containers",
       "metadata": {
-        "description": "The name of the module. Only use between 3-24 letters or numers, or the Warehouse can't function. The functionApp gets the same name followed by the \"-resourceGroup.id\". The modulename is hard to change later, so try to keep it static. It is used in dataLake and databse as an identifier of data that comes from this app"
+        "description": "The name of the module. Only use between 3-24 letters or numers, or the Warehouse will not work. The functionApp gets the same name followed by the \"-resourceGroup.id\". The modulename is hard to change later, so try to keep it static. It is used in dataLake and databse as an identifier of data that comes from this app"
       },
       "maxLength": 24,
       "minLength": 3
     },
-    "OS2IOTApiBaseUrl": {
+    "containerOperatingSystem": {
       "type": "string",
-      "defaultValue": "https://backend.os2iot.gate21.dk",
+      "defaultValue": "Linux",
       "metadata": {
-        "description": "The url to the backend of OS2IOT. Used to fetch data from API. If you use the one from gate21, the address is: https://backend.os2iot.gate21.dk"
+        "description": "Operating system"
+      },
+      "allowedValues": [
+        "Linux",
+        "Windows"
+      ]
+    },
+    "container1Name": {
+      "type": "string",
+      "defaultValue": "container1",
+      "metadata": {
+        "description": "The name of the container. The container must contain only lowercase letters, numbers, and dashes. It cannot start or end with a dash and consecutive dashes are not allowed."
+      },
+      "maxLength": 63,
+      "minLength": 1
+    },
+    "container1Image": {
+      "type": "string",
+      "defaultValue": "bygdrift/consoleappcontainerv1",
+      "metadata": {
+        "description": "Image fra Docker hub like: bygdrift/consoleappcontainerv1"
+      },
+      "minLength": 1
+    },
+    "container1Variables": {
+      "type": "string",
+      "defaultValue": "[[{Var1:'Jon'}]",
+      "metadata": {
+        "description": "Variables as jArray like: [{Var1:'Jon'}, {variable:'Doe'}]"
       }
     },
-    "OS2IOTApiUserName": {
-      "type": "secureString",
+    "container2Name": {
+      "type": "string",
       "metadata": {
-        "description": "Username to OS2IOT. Can be left blank, but then data from OS2IOT API, will not be fetched."
+        "description": "The name of the container. Leave it blank if you only have one container. The container must contain only lowercase letters, numbers, and dashes. It cannot start or end with a dash and consecutive dashes are not allowed."
+      },
+      "maxLength": 63
+    },
+    "container2Image": {
+      "type": "string",
+      "metadata": {
+        "description": "Image fra Docker hub like: bygdrift/consoleappcontainerv1"
       }
     },
-    "OS2IOTApiPassword": {
-      "type": "secureString",
+    "container2Variables": {
+      "type": "string",
       "metadata": {
-        "description": "Password to OS2IOT. Can be left blank, but then data from OS2IOT API, will not be fetched."
+        "description": "Variables as jArray like: [{Var1:'Jon'}, {variable:'Doe'}]"
       }
     },
-    "OS2IOTPostPayloadsAuthorizationKey": {
-      "type": "secureString",
+    "container3Name": {
+      "type": "string",
       "metadata": {
-        "description": "The authorizationKey used in OS2IOT"
+        "description": "The name of the container. Leave it blank if you only have one container. The container must contain only lowercase letters, numbers, and dashes. It cannot start or end with a dash and consecutive dashes are not allowed."
+      },
+      "maxLength": 63
+    },
+    "container3Image": {
+      "type": "string",
+      "metadata": {
+        "description": "Image fra Docker hub like: bygdrift/consoleappcontainerv1"
+      }
+    },
+    "container3Variables": {
+      "type": "string",
+      "metadata": {
+        "description": "Variables as jArray like: [{Var1:'Jon'}, {variable:'Doe'}]"
+      }
+    },
+    "scheduleExpression": {
+      "type": "string",
+      "defaultValue": "0 0 1 * * *",
+      "metadata": {
+        "description": "Schedule"
       }
     },
     "timeZoneId": {
@@ -59,33 +114,10 @@
     }
   },
   "variables": {
-    "functionAppName": "[format('{0}-{1}', parameters('ModuleName'), uniqueString(resourceGroup().id))]"
+    "functionAppName": "[format('{0}-{1}', parameters('ModuleName'), uniqueString(resourceGroup().id))]",
+    "contributorRoleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
   },
   "resources": [
-    {
-      "type": "Microsoft.KeyVault/vaults/secrets",
-      "apiVersion": "2019-09-01",
-      "name": "[format('{0}/{1}', format('keyvault-{0}', uniqueString(resourceGroup().id)), format('Secret--{0}--OS2IOTApiUserName', parameters('ModuleName')))]",
-      "properties": {
-        "value": "[parameters('OS2IOTApiUserName')]"
-      }
-    },
-    {
-      "type": "Microsoft.KeyVault/vaults/secrets",
-      "apiVersion": "2019-09-01",
-      "name": "[format('{0}/{1}', format('keyvault-{0}', uniqueString(resourceGroup().id)), format('Secret--{0}--OS2IOTApiPassword', parameters('ModuleName')))]",
-      "properties": {
-        "value": "[parameters('OS2IOTApiPassword')]"
-      }
-    },
-    {
-      "type": "Microsoft.KeyVault/vaults/secrets",
-      "apiVersion": "2019-09-01",
-      "name": "[format('{0}/{1}', format('keyvault-{0}', uniqueString(resourceGroup().id)), format('Secret--{0}--PostPayloadsAuthorizationKey', parameters('ModuleName')))]",
-      "properties": {
-        "value": "[parameters('OS2IOTPostPayloadsAuthorizationKey')]"
-      }
-    },
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2020-10-01",
@@ -135,8 +167,44 @@
               "value": "[parameters('ModuleName')]"
             },
             {
-              "name": "OS2IOTApiBaseUrl",
-              "value": "[parameters('OS2IOTApiBaseUrl')]"
+              "name": "ContainerOperatingSystem",
+              "value": "[parameters('containerOperatingSystem')]"
+            },
+            {
+              "name": "Container1Name",
+              "value": "[trim(toLower(parameters('container1Name')))]"
+            },
+            {
+              "name": "Container1Image",
+              "value": "[parameters('container1Image')]"
+            },
+            {
+              "name": "Container1Variables",
+              "value": "[parameters('container1Variables')]"
+            },
+            {
+              "name": "Container2Name",
+              "value": "[trim(toLower(parameters('container2Name')))]"
+            },
+            {
+              "name": "Container2Image",
+              "value": "[parameters('container2Image')]"
+            },
+            {
+              "name": "Container2Variables",
+              "value": "[parameters('container2Variables')]"
+            },
+            {
+              "name": "Container3Name",
+              "value": "[trim(toLower(parameters('container3Name')))]"
+            },
+            {
+              "name": "Container3Image",
+              "value": "[parameters('container3Image')]"
+            },
+            {
+              "name": "Container3Variables",
+              "value": "[parameters('container3Variables')]"
             },
             {
               "name": "TimeZoneId",
@@ -145,6 +213,14 @@
             {
               "name": "CultureName",
               "value": "[parameters('CultureName')]"
+            },
+            {
+              "name": "ResourceGroup",
+              "value": "[resourceGroup().name]"
+            },
+            {
+              "name": "ScheduleExpression",
+              "value": "[parameters('scheduleExpression')]"
             },
             {
               "name": "VaultUri",
@@ -166,7 +242,7 @@
       "apiVersion": "2021-01-01",
       "name": "[format('{0}/web', variables('functionAppName'))]",
       "properties": {
-        "repoUrl": "https://github.com/hillerod/Warehouse.Modules.OS2IOTBMS",
+        "repoUrl": "https://github.com/Bygdrift/Warehouse.Modules.Containers",
         "branch": "master",
         "isManualIntegration": true
       },
@@ -193,6 +269,19 @@
             "tenantId": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppName')), '2021-02-01', 'full').identity.tenantId]"
           }
         ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceGroup().id, parameters('ModuleName'), variables('contributorRoleDefinitionId'), 'ServicePrincipal')]",
+      "properties": {
+        "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('functionAppName')), '2021-02-01', 'full').identity.principalId]",
+        "principalType": "ServicePrincipal"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"

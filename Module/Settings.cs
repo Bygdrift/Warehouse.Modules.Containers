@@ -4,11 +4,14 @@ namespace Module
 {
     public class Settings
     {
-        [ConfigSetting(NotSet = NotSet.ThrowError)]
+        [ConfigSetting(NotSet = NotSet.ThrowError, ErrorMessage = "ScheduleExpression has to be set")]
         public string ScheduleExpression { get; set; }
 
-        [ConfigSetting(NotSet = NotSet.ThrowError)]
+        [ConfigSetting(NotSet = NotSet.ThrowError, ErrorMessage = "Resourcegroup has to be set")]
         public string ResourceGroup { get; set; }
+
+        [ConfigSetting(Default = "Linux")]
+        public string ContainerOperatingSystem { get; set; }
 
         [ConfigSetting]
         public string Container1Name { get; set; }

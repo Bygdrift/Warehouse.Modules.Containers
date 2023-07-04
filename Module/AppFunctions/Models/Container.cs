@@ -27,8 +27,6 @@ namespace Module.AppFunctions.Models
         public double Cpu { get; }
         public Dictionary<string, string> Variables { get; }
 
-        //public List<ContainerEnvironmentVariable> Variables { get; set; } = new();
-
         private Dictionary<string, string> GetVaribles(string json)
         {
             if (string.IsNullOrEmpty(json)) return null;

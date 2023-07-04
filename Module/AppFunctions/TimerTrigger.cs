@@ -47,10 +47,6 @@ namespace Module.AppFunctions
             SubscriptionResource subscription = await armClient.GetDefaultSubscriptionAsync();  //https://learn.microsoft.com/en-us/dotnet/azure/sdk/resource-management?tabs=PowerShell#management-sdk-cheat-sheet
             App.Log.LogInformation($"224" + subscription.Id.SubscriptionId);
 
-            var t = subscription.GetResourceGroups();
-            var hh = string.Join(",", t.ToArray().Select(o => o.Data.Name));
-            App.Log.LogWarning($"104" + hh);
-
             ResourceGroupResource rg = subscription.GetResourceGroup(App.Settings.ResourceGroup);
             App.Log.LogWarning($"105");
 
@@ -62,7 +58,7 @@ namespace Module.AppFunctions
 
             var containers = new List<Container>();
             if (App.Settings.Container1Name is not null && App.Settings.Container1Image is not null)
-                containers.Add(new Container(App, App.Settings.Container1Name, App.Settings.Container1Image,  1, 1, App.Settings.Container1Variables));
+                containers.Add(new Container(App, App.Settings.Container1Name, App.Settings.Container1Image, 1, 1, App.Settings.Container1Variables));
             if (App.Settings.Container2Name is not null && App.Settings.Container2Image is not null)
                 containers.Add(new Container(App, App.Settings.Container2Name, App.Settings.Container2Image, 1, 1, App.Settings.Container2Variables));
             if (App.Settings.Container3Name is not null && App.Settings.Container3Image is not null)
@@ -71,7 +67,9 @@ namespace Module.AppFunctions
 
             var containername = App.ModuleName + keyVaultName.Replace("keyvault", "");  //Tilføjer guid fra keyvault. Det vil tage lang tid at gennemskue hvordan jeg selv bygger den.
             App.Log.LogWarning($"110");
-            var containerGroup = new ContainerGroup(containername, App.ModuleName, ContainerInstanceOperatingSystemType.Linux, containers);
+            var operatingSystem = App.Settings.ContainerOperatingSystem.Equals("Linux", StringComparison.OrdinalIgnoreCase) ? ContainerInstanceOperatingSystemType.Linux : ContainerInstanceOperatingSystemType.Windows;
+            App.Log.LogWarning($"110.5 {operatingSystem}");
+            var containerGroup = new ContainerGroup(containername, App.ModuleName, operatingSystem, containers);
             App.Log.LogWarning($"111");
             await CreateACI(rg, containerGroup, keyVault);
             App.Log.LogWarning($"112");
@@ -103,7 +101,7 @@ namespace Module.AppFunctions
             var keyVaultPolicies = new List<KeyVaultAccessPolicy> { keyVaultPolicy };
             var keyVaultPolicyProperties = new KeyVaultAccessPolicyProperties(keyVaultPolicies);
             var keyVaultParameters = new KeyVaultAccessPolicyParameters(keyVaultPolicyProperties);
-            var res = await keyVault.UpdateAccessPolicyAsync(AccessPolicyUpdateKind.Add, keyVaultParameters);
+            await keyVault.UpdateAccessPolicyAsync(AccessPolicyUpdateKind.Add, keyVaultParameters);
         }
     }
 }
