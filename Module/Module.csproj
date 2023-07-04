@@ -3,7 +3,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
 		<OutputType>Library</OutputType>
-		<Version>0.4.1</Version>
+		<Version>0.4.2</Version>
 		<PackageId>Bygdrift.Warehouse.Modules.Containers</PackageId>
 		<Authors>Kenboc</Authors>
 		<Company>Bygdrift</Company>
